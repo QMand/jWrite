@@ -166,4 +166,4 @@ class jWrite{
 
 };
 
-/* end of jWrite.hpp */
+/* end of jWrite.h */
