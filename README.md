@@ -1,4 +1,4 @@
-# jWrite
+# jWrite and # jRead
 C JSON Writer
 
 Credit to [Tony Wilk](https://www.codeproject.com/Members/tonywilk)
