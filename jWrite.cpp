@@ -10,7 +10,7 @@
 // This C++ ("Arduino version"): TonyWilk, Mar 2018
 //
 #include <Arduino.h>
-#include "jWrite.hpp"
+#include "jWrite.h"
 
 //------------------------------------------
 // open
