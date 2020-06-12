@@ -55,6 +55,8 @@
 // Original jWrite in C: TonyWilk, Mar 2015
 // This C++ version: TonyWilk, Mar 2018
 // 
+#ifndef JWRITE_H
+#define JWRITE_H
 
 #define JWRITE_STACK_DEPTH 32			// max nesting depth of objects/arrays
 
@@ -165,5 +167,5 @@ class jWrite{
 	const char * errorToString( int err );
 
 };
-
+#endif /* JWRITE_H */
 /* end of jWrite.h */
