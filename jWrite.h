@@ -58,7 +58,7 @@
 #ifndef JWRITE_H
 #define JWRITE_H
 
-#define JWRITE_STACK_DEPTH 32			// max nesting depth of objects/arrays
+#define JWRITE_STACK_DEPTH 16 //32			// max nesting depth of objects/arrays
 
 #define JW_COMPACT	0					// output string control for jwOpen()
 #define JW_PRETTY	1					// pretty adds \n and indentation
@@ -85,7 +85,7 @@ class jWrite{
 	char *buffer;						// pointer to application's buffer
 	unsigned int buflen;		// length of buffer
 	char *bufp;							// current write position in buffer
-	char tmpbuf[32];				// local buffer for int/double convertions
+	char tmpbuf[64];				// local buffer for int/double convertions
 	int error;							// error code
 	int callNo;							// API call on which error occurred
 	struct jwNodeStack{
@@ -99,6 +99,8 @@ class jWrite{
 	void putstr( const char *str );
 	void putraw( const char *str );
 	void modp_itoa10(int32_t value, char* str);
+	char *modpulltostr(uint64_t value, char *ptr, int base);
+	char *modpultostr(unsigned long value, char *ptr, int base);
 	void modp_dtoa2(double value, char* str, int prec);
 	void pretty();
 	enum jwNodeType pop();
@@ -129,11 +131,15 @@ class jWrite{
 	//   which caused that error.
 	int errorPos( );
 
+	uint16_t CurrMsgLength();
+
 	// Object insertion functions
 	// - used to insert "key":"value" pairs into an object
 	//
 	void obj_string( const char *key, const char *value );
 	void obj_int( const char *key, int value );
+	void obj_ul( const char *key, uint32_t value );
+	void obj_ull( const char *key, uint64_t value );
 	void obj_double( const char *key, double value );
 	void obj_bool( const char *key, int oneOrZero );
 	void obj_null( const char *key );
@@ -145,6 +151,8 @@ class jWrite{
 	//
 	void arr_string( const char *value );
 	void arr_int( int value );
+	void arr_ul( uint32_t value );
+	void arr_ull( uint64_t value );
 	void arr_double( double value );
 	void arr_bool( int oneOrZero );
 	void arr_null( );
