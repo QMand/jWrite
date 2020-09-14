@@ -80,7 +80,9 @@ int jWrite::errorPos( )
 	return callNo;
 }
 
-
+uint16_t jWrite::CurrMsgLength(){
+	return (uint16_t)(bufp - buffer + 1);
+}
 //------------------------------------------
 // Object insert functions
 //
@@ -106,6 +108,20 @@ void jWrite::obj_string( const char *key, const char *value )
 void jWrite::obj_int( const char *key, int value )
 {
 	modp_itoa10( value, tmpbuf );
+	obj_raw( key, tmpbuf );
+}
+
+void jWrite::obj_ul( const char *key, uint32_t value )
+{
+	modpultostr(value, tmpbuf, 10);
+	//modp_itoa10( value, tmpbuf );
+	obj_raw( key, tmpbuf );
+}
+
+void jWrite::obj_ull( const char *key, uint64_t value )
+{
+	modpulltostr(value, tmpbuf, 10);
+	//modp_itoa10( value, tmpbuf );
 	obj_raw( key, tmpbuf );
 }
 
@@ -170,6 +186,20 @@ void jWrite::arr_string( const char *value )
 void jWrite::arr_int( int value )
 {
 	modp_itoa10( value, tmpbuf );
+	arr_raw( tmpbuf );
+}
+
+void jWrite::arr_ul( uint32_t value )
+{
+	modpultostr(value, tmpbuf, 10);
+	//modp_itoa10( value, tmpbuf );
+	arr_raw( tmpbuf );
+}
+
+void jWrite::arr_ull( uint64_t value )
+{
+	modpulltostr(value, tmpbuf, 10);
+	//modp_itoa10( value, tmpbuf );
 	arr_raw( tmpbuf );
 }
 
@@ -391,7 +421,89 @@ void jWrite::modp_itoa10(int32_t value, char* str)
     // Reverse string
     strreverse(str,wstr-1);
 }
+char *jWrite::modpulltostr(uint64_t value, char *ptr, int base)
+{
+  uint64_t t = 0, res = 0;
+  uint64_t tmp = value;
+  int count = 0;
 
+  if (nullptr == ptr)
+  {
+    return nullptr;
+  }
+
+  if (tmp == 0)
+  {
+    count++;
+  }
+
+  while (tmp > 0)
+  {
+    tmp = tmp / base;
+    count++;
+  }
+
+  ptr += count;
+
+  *ptr = '\0';
+
+  do
+  {
+    res = value - base * (t = value / base);
+    if (res < 10)
+    {
+      * --ptr = '0' + res;
+    }
+    else if ((res >= 10) && (res < 16))
+    {
+      * -- ptr = 'A' - 10 + res;
+    }
+  } while ((value = t) != 0);
+
+  return (ptr);
+}
+
+char *jWrite::modpultostr(unsigned long value, char *ptr, int base)
+{
+  unsigned long t = 0, res = 0;
+  unsigned long tmp = value;
+  int count = 0;
+
+  if (NULL == ptr)
+  {
+    return NULL;
+  }
+
+  if (tmp == 0)
+  {
+    count++;
+  }
+
+  while(tmp > 0)
+  {
+    tmp = tmp/base;
+    count++;
+  }
+
+  ptr += count;
+
+  *ptr = '\0';
+
+  do
+  {
+    res = value - base * (t = value / base);
+    if (res < 10)
+    {
+      * -- ptr = '0' + res;
+    }
+    else if ((res >= 10) && (res < 16))
+    {
+        * --ptr = 'A' - 10 + res;
+    }
+  } while ((value = t) != 0);
+
+  return(ptr);
+}
 /**
  * Powers of 10
  * 10^0 to 10^9
